@@ -1,0 +1,9 @@
+{
+  "model_type": "bert",
+  "architectures": [
+    "DeepBERTweet"
+  ],
+  "hidden_size": 768,
+  "num_labels": 2,
+  "dropout": 0.3
+}
