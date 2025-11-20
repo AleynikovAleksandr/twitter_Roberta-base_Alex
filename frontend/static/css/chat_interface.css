@@ -1,0 +1,304 @@
+ :root {
+      --neutral-50: 0 0% 97%;
+      --black: 0 0% 2%;
+      --bg: #ffffff;
+      --input-bg: #ffffff;
+      --border: #e5e7eb;
+      --text: hsl(var(--black));
+      --placeholder: #9ca3af;
+      --send-bg: #000000;
+      --send-hover: #1a1a1a;
+      --radius: 20px;
+      --input-radius: 40px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.1);
+      --max-width: 48rem;
+      --user-msg-bg: #e9e9e980;
+      --ai-msg-bg: transparent;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d0d0d;
+        --input-bg: #1a1a1a;
+        --border: #2d2d2d;
+        --text: #e5e5e5;
+        --placeholder: #9ca3af;
+        --send-bg: #ffffff;
+        --send-hover: #e5e5e5;
+        --user-msg-bg: #e9e9e980;
+        --ai-msg-bg: transparent;
+      }
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* === Header === */
+    .header {
+      padding: 12px 20px;
+      background-color: var(--bg);
+      display: flex;
+      align-items: center;
+      position: relative;
+      flex-shrink: 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background-image: url('data:image/png;base64,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');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .logo-text {
+      font-weight: 600;
+      font-size: 18px;
+      color: var(--text);
+    }
+
+    /* === Chat === */
+    .chat {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.5rem 1rem 1rem 1rem; 
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: var(--max-width);
+      margin: 0.4rem auto 0 auto; /* 0.5rem сверху */
+      width: 100%;
+      scrollbar-width: none;
+      scroll-behavior: smooth;
+      
+    }
+
+    .chat::-webkit-scrollbar {
+      display: none;
+    }
+
+    .message {
+      max-width: 80%;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius);
+      font-size: 15px;
+      line-height: 1.5;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .message.user {
+      align-self: flex-end;
+      background: var(--user-msg-bg);
+      color: var(--text);
+      backdrop-filter: blur(10px);
+      border: none;
+    }
+
+    .message.ai {
+      align-self: flex-start;
+      background: var(--ai-msg-bg);
+      color: var(--text);
+      border: none;
+      margin-bottom: 1rem; 
+      
+      
+    }
+
+    /* === Empty State === */
+    .empty {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: var(--text);
+      padding: 2rem;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .empty h1 {
+      font-size: 1.75rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      border-radius: var(--radius);
+      padding: 1rem 2rem;
+      
+    }
+
+    /* === Input Container === */
+    .input-container {
+      padding: 1rem;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .input-wrapper {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-end;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--input-radius);
+      padding: 8px 16px;
+      box-shadow: var(--shadow);
+      transition: none;
+      min-height: 56px;
+    }
+
+    .input-wrapper:focus-within {
+      border-color: var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .prompt-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      padding: 12px 8px;
+      font-size: 16px;
+      color: var(--text);
+      resize: none;
+      min-height: 24px;
+      max-height: 200px;
+      line-height: 1.5;
+      overflow-y: auto;
+      font-family: inherit;
+      border-radius: 20px;
+    }
+
+    .prompt-input::placeholder {
+      color: var(--placeholder);
+    }
+
+    .send-btn {
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: var(--radius);
+      background: var(--send-bg);
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+      flex-shrink: 0;
+      margin-left: 8px;
+      margin-bottom: 4px;
+    }
+
+    .send-btn:hover {
+      background: var(--send-hover);
+    }
+
+    .send-btn:disabled {
+      background: var(--placeholder);
+      cursor: not-allowed;
+    }
+
+    /* === Центрирование input при пустом чате === */
+    .centered-input {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      padding: 1rem;
+      z-index: 10;
+    }
+
+    .centered-input .input-wrapper {
+      max-width: 40rem;
+      border-radius: var(--input-radius);
+    }
+
+    .bottom-input {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .has-messages .centered-input {
+      display: none;
+    }
+
+    .has-messages .bottom-input {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Анимация появления сообщений */
+    @keyframes fadeIn {
+      from { 
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Анимация печати текста */
+    .typing-animation {
+      overflow: hidden;
+      position: relative;
+    }
+
+    .typing-animation::after {
+      content: '|';
+      animation: blink 1s infinite;
+      margin-left: 2px;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    /* Стили для скроллбара (если понадобится) */
+    .chat::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .chat::-webkit-scrollbar-track {
+      background: transparent;
+      border-radius: 3px;
+    }
+
+    .chat::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 3px;
+    }
+
+    .chat::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 0, 0, 0.3);
+    }

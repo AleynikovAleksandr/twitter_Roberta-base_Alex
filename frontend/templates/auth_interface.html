@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AstroMindNLP</title>
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/chat_interface.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/flash_message.css') }}">
+   <script defer src="{{ url_for('static', filename='js/chat.js') }}"></script>
+   <script>
+    // Получаем MAX_LENGTH из Flask
+    const MAX_LENGTH = {{ max_length }};
+  </script>
+</head>
+<body>
+       {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-container">
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ category }}">
+                        {{ message }}
+                        <span class="close-btn">&times;</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <div class="logo-icon"></div>
+      <div class="logo-text">AstroMindNLP</div>
+    </div>
+  </header>
+
+  <!-- Chat -->
+  <div class="chat" id="chat">
+    <!-- Сообщения будут сюда -->
+  </div>
+
+  <!-- Центрированный input (пустой чат) -->
+  <div class="input-container centered-input" id="centeredInput">
+    <div class="empty">
+      <h1>Что сегодня в повестке дня?</h1>
+    </div>
+    <div class="input-wrapper">
+      <textarea
+        id="promptCentered"
+        class="prompt-input"
+        placeholder="Спросите что-нибудь..."
+        rows="1"
+      ></textarea>
+      <button id="sendBtnCentered" class="send-btn" disabled>
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M8.99992 16V6.41407L5.70696 9.70704C5.31643 10.0976 4.68342 10.0976 4.29289 9.70704C3.90237 9.31652 3.90237 8.6835 4.29289 8.29298L9.29289 3.29298L9.36907 3.22462C9.76184 2.90427 10.3408 2.92686 10.707 3.29298L15.707 8.29298L15.7753 8.36915C16.0957 8.76192 16.0731 9.34092 15.707 9.70704C15.3408 10.0732 14.7618 10.0958 14.3691 9.7754L14.2929 9.70704L10.9999 6.41407V16C10.9999 16.5523 10.5522 17 9.99992 17C9.44764 17 8.99992 16.5523 8.99992 16Z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Нижний input (при сообщениях) -->
+  <div class="input-container bottom-input" id="bottomInput">
+    <div class="input-wrapper">
+      <textarea
+        id="promptBottom"
+        class="prompt-input"
+        placeholder="Спросите что-нибудь..."
+        rows="1"
+      ></textarea>
+      <button id="sendBtnBottom" class="send-btn" disabled>
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M8.99992 16V6.41407L5.70696 9.70704C5.31643 10.0976 4.68342 10.0976 4.29289 9.70704C3.90237 9.31652 3.90237 8.6835 4.29289 8.29298L9.29289 3.29298L9.36907 3.22462C9.76184 2.90427 10.3408 2.92686 10.707 3.29298L15.707 8.29298L15.7753 8.36915C16.0957 8.76192 16.0731 9.34092 15.707 9.70704C15.3408 10.0732 14.7618 10.0958 14.3691 9.7754L14.2929 9.70704L10.9999 6.41407V16C10.9999 16.5523 10.5522 17 9.99992 17C9.44764 17 8.99992 16.5523 8.99992 16Z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  
+</body>
+</html>
