@@ -8,12 +8,14 @@
       --placeholder: #9ca3af;
       --send-bg: #000000;
       --send-hover: #1a1a1a;
+      --send-icon: #ffffff;
       --radius: 20px;
       --input-radius: 40px;
       --shadow: 0 1px 3px rgba(0,0,0,0.1);
       --max-width: 48rem;
       --user-msg-bg: #e9e9e980;
       --ai-msg-bg: transparent;
+      --error: #ef4444;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -25,6 +27,7 @@
         --placeholder: #9ca3af;
         --send-bg: #ffffff;
         --send-hover: #e5e5e5;
+        --send-icon: #000000;
         --user-msg-bg: #e9e9e980;
         --ai-msg-bg: transparent;
       }
@@ -204,7 +207,7 @@
       border: none;
       border-radius: var(--radius);
       background: var(--send-bg);
-      color: white;
+      color: var(--send-icon);
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -302,3 +305,21 @@
     .chat::-webkit-scrollbar-thumb:hover {
       background: rgba(0, 0, 0, 0.3);
     }
+
+    .counter {
+  font-size: 13px;
+  color: var(--placeholder);
+  align-self: flex-end;
+  margin-bottom: 16px;
+  user-select: none;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+.counter .over {
+  color: var(--error);
+  font-weight: 600;
+}
+.counter.warning {
+  
+  font-weight: 600;
+}

@@ -7,8 +7,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const promptBottom = document.getElementById('promptBottom');
     const sendBtnCentered = document.getElementById('sendBtnCentered');
     const sendBtnBottom = document.getElementById('sendBtnBottom');
+    const counterCentered = document.getElementById('counterCentered');
+    const counterBottom = document.getElementById('counterBottom');
 
-    const MAX_LENGTH = 280;
+    // MAX_LENGTH должен быть передан из шаблона:
+    const MAX_LENGTH = (typeof window.MAX_LENGTH !== 'undefined') ? Number(window.MAX_LENGTH) : 280;
+
     let isFlashActive = false;
 
     // === API запрос ===
@@ -22,33 +26,23 @@ document.addEventListener('DOMContentLoaded', function() {
         return response.json();
     }
 
-    // Проверка на английский через сервер
+    // Проверка на английский через сервер (если у вас локальная проверка — замените)
     async function isEnglish(text) {
-        const response = await fetch("/api/check_english", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text })
-        });
-
-        const data = await response.json();
-        if (!data.valid) {
-            showError(data.error);
-        }
-        return data.valid;
-    }
-
-    // Строгая серверная проверка нижнего input
-    async function checkInput(promptEl, promptBottom, text) {
-        if (promptEl === promptBottom) {
-            if (!(await isEnglish(text))) {
-                return false;
+        try {
+            const response = await fetch("/api/check_english", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text })
+            });
+            const data = await response.json();
+            if (!data.valid) {
+                showError(data.error);
             }
-            if (text.length > MAX_LENGTH) {
-                showError(`Text too long. Max ${MAX_LENGTH} characters allowed.`);
-                return false;
-            }
+            return data.valid;
+        } catch (e) {
+            showError("Network error");
+            return false;
         }
-        return true;
     }
 
     // ========= Авто-рост textarea =========
@@ -63,14 +57,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // ====== ФУНКЦИЯ: updateCounter ======
+    function updateCounter(textarea, counterEl) {
+        if (!counterEl) return;
+        const chars = textarea.value.length;
+        counterEl.innerHTML = `<span class="${chars > MAX_LENGTH ? 'over' : ''}">${chars}</span>/${MAX_LENGTH}`;
+
+        // Только для нижнего инпута — делаем класс warning при превышении
+        if (textarea === promptBottom) {
+            counterEl.classList.toggle('warning', chars > MAX_LENGTH);
+        } else {
+            counterEl.classList.remove('warning');
+        }
+    }
+
     function updateSendButton(promptEl, sendBtn) {
-        // Верхний input - без валидации
+        // Верхний input — без валидации длины
         if (promptEl === promptCentered) {
             sendBtn.disabled = promptEl.value.trim() === '';
         }
-        // Нижний input - disabled по flash, иначе всегда активна
+        // Нижний input — отключаем кнопку при пустоте или превышении длины
         else {
-            sendBtn.disabled = isFlashActive || promptEl.value.trim() === '';
+            const text = promptEl.value.trim();
+            const tooLong = promptEl.value.length > MAX_LENGTH;
+            sendBtn.disabled = isFlashActive || text === '' || tooLong;
         }
     }
 
@@ -101,6 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
             flash.remove();
             isFlashActive = false;
             updateSendButton(promptBottom, sendBtnBottom);
+            updateCounter(promptBottom, counterBottom);
         });
 
         setTimeout(() => {
@@ -109,24 +120,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 flash.remove();
                 isFlashActive = false;
                 updateSendButton(promptBottom, sendBtnBottom);
+                updateCounter(promptBottom, counterBottom);
             }, 300);
         }, 5000);
     }
 
-    // ========= Ввод и авторост, с валидацией =========
-    [promptCentered].forEach(p => {
-        p.addEventListener('input', () => {
-            adjustHeight(p);
-            updateSendButton(p, sendBtnCentered);
-        });
-        adjustHeight(p);
+    // ========= Ввод и авто-рост, с обновлением счётчиков =========
+    promptCentered.addEventListener('input', () => {
+        adjustHeight(promptCentered);
+        updateSendButton(promptCentered, sendBtnCentered);
+        updateCounter(promptCentered, counterCentered);
     });
 
     promptBottom.addEventListener('input', () => {
         adjustHeight(promptBottom);
         updateSendButton(promptBottom, sendBtnBottom);
+        updateCounter(promptBottom, counterBottom);
     });
+
+    // Инициализация высот/кнопок/счётчиков
+    adjustHeight(promptCentered);
     adjustHeight(promptBottom);
+    updateSendButton(promptCentered, sendBtnCentered);
     updateSendButton(promptBottom, sendBtnBottom);
 
     // ========= ОТПРАВКА СООБЩЕНИЯ =========
@@ -134,17 +149,21 @@ document.addEventListener('DOMContentLoaded', function() {
         const text = promptEl.value.trim();
         if (!text) return;
 
-        // Вся проверка — через checkInput
-        const valid = await checkInput(promptEl, promptBottom, text);
-        if (promptEl === promptBottom && !valid) {
-            // showError уже показан внутри checkInput
-            return;
+        // Для нижнего input — проверяем на сервере (isEnglish) и длину
+        if (promptEl === promptBottom) {
+            const okEnglish = await isEnglish(text);
+            if (!okEnglish) return;
+            if (text.length > MAX_LENGTH) {
+                showError(`Text too long. Max ${MAX_LENGTH} characters allowed.`);
+                return;
+            }
         }
 
-        addMessage(text, promptEl === promptCentered ? 'user' : 'user');
+        addMessage(text, 'user');
         promptEl.value = '';
         adjustHeight(promptEl);
         updateSendButton(promptEl, sendBtn);
+        updateCounter(promptEl, promptEl === promptCentered ? counterCentered : counterBottom);
 
         document.body.classList.add('has-messages');
         promptBottom.focus();
@@ -218,4 +237,7 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('resize', () => {
         [promptCentered, promptBottom].forEach(p => adjustHeight(p));
     });
+
+    updateCounter(promptCentered, counterCentered);
+    updateCounter(promptBottom, counterBottom);
 });

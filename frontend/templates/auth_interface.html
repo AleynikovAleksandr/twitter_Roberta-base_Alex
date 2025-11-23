@@ -8,8 +8,7 @@
    <link rel="stylesheet" href="{{ url_for('static', filename='css/flash_message.css') }}">
    <script defer src="{{ url_for('static', filename='js/chat.js') }}"></script>
    <script>
-    // Получаем MAX_LENGTH из Flask
-    const MAX_LENGTH = {{ max_length }};
+      const MAX_LENGTH = {{ max_length }};
   </script>
 </head>
 <body>
@@ -45,6 +44,7 @@
       <h1>Что сегодня в повестке дня?</h1>
     </div>
     <div class="input-wrapper">
+      <div class="counter" id="counterCentered">0/280</div>
       <textarea
         id="promptCentered"
         class="prompt-input"
@@ -62,6 +62,7 @@
   <!-- Нижний input (при сообщениях) -->
   <div class="input-container bottom-input" id="bottomInput">
     <div class="input-wrapper">
+      <div class="counter" id="counterBottom">0/280</div>
       <textarea
         id="promptBottom"
         class="prompt-input"
