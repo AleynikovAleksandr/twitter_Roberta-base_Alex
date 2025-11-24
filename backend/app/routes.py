@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify, flash, render_template
+import emoji
 import re
 from .SentimentPredictor import SentimentPredictor
 from langdetect import detect, DetectorFactory
@@ -20,7 +21,9 @@ predictor = SentimentPredictor(MODEL_PATH)
 # Проверка на английский текст через langdetect
 def is_english(text):
     try:
-        return detect(text) == 'en'
+        # Предобработка твита через SentimentPredictor
+        cleaned_text = predictor.preprocess_tweet(text)
+        return detect(cleaned_text) == 'en'
     except LangDetectException:
         return False
 

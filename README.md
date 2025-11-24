@@ -5,6 +5,7 @@
 ![Flask](https://img.shields.io/badge/Flask-3.0+-black)
 ![Flask-CORS](https://img.shields.io/badge/Flask--CORS-4.0.0-lightgrey) 
 ![Transformers](https://img.shields.io/badge/Transformers-4.40+-green)
+![Emoji](https://img.shields.io/badge/Emoji-2.12.1-orange)
 ![LangDetect](https://img.shields.io/badge/LangDetect-1.0.9-yellow)
 ![NumPy](https://img.shields.io/badge/NumPy-1.26.4-blueviolet)
 ![License](https://img.shields.io/badge/License-Restricted-red)
