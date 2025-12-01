@@ -1,0 +1,26 @@
+
+
+services:
+  model_server:
+    build: ./model_server
+    image: astro_model_server_image
+    container_name: astro_model_server
+    ports:
+      - "2000:2000"
+    volumes:
+    - ./model_server/models:/app/model_server/models
+    
+
+  backend:
+    build: ./backend
+    image: astro_backend_image
+    container_name: astro_backend
+    ports:
+      - "5000:5000"
+    environment:
+      - MODEL_SERVER_URL=http://model_server:2000
+    depends_on:
+      - model_server
+    volumes:
+      - ./backend:/app/backend
+      - ./frontend:/app/frontend
