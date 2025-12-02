@@ -12,24 +12,18 @@
 ![Base Model](https://img.shields.io/badge/cardiffnlp/twitter--roberta--base--sentiment--latest-FFD43B?style=flat&logo=huggingface&logoColor=black)
 
 Custom model **DeepBERTweet** — a fine-tuned version of `cardiffnlp/twitter-roberta-base-sentiment-latest` with enhanced preprocessing and binary classification: **positive / negative**.
----
 
 ## Current Features
 - Fully functional Flask backend
-- Local loading of the custom DeepBERTweet model
-- Advanced tweet preprocessing:
-  - URLs → `<URL>`
-  - @mentions → `<USER>`
-- REST API endpoint: `/api/predict`
+- Local loading of the custom RoBERTa/BERTweet model
 - Modern UI (Vanilla JS + CSS):
   - Dual input fields with auto-switching
   - First input hides after sending the first message
 - Strict input validation:
   - English language only
-  - Maximum text length 280(Twitter limit)
-- 100% local & offline — no internet or API keys required
-
----
+  - Maximum text length 280 (Twitter limit)
+- Dockerized setup for backend and model server
+- Easy deployment using `docker-compose`
 
 ## Model Information
 
@@ -63,51 +57,25 @@ You can access the notebook here:
 ### 1. Clone the Repository
 ```bash
 git clone https://github.com/AleynikovAleksandr/twitter_Roberta-base_Alex.git
-cd twitter_Roberta-base_Alex/backend
 ```
-### 2. Create and Activate Virtual Environment:
-   * On macOS/Linux:
-     ```bash
-     python -m venv venv
-     source venv/bin/activate
-     ```
-   * On Windows:
-     ```bash
-     python -m venv venv
-     venv\Scripts\activate
-     ```
-### 3. Install Dependencies
-
-**Upgrade pip to the latest version**
-```bash
-pip install --upgrade pip
-```
-**Install PyTorch CPU version 2.2.2**
-```bash
-pip install torch==2.2.2 --index-url https://download.pytorch.org/whl/cpu
-```
-**Install all other required Python packages**
-```bash
-pip install -r requirements.txt
-```
+### 2. Build and Start Containers
+  Build and start backend and model_server containers
+  ```bash
+  docker compose up
+  ```
+    
 ## Run the Application
 
-```bash
-cd backend
-python run.py
-```
+The application is available at the following link in your browser:[Open Twitter Roberta App](http://85.95.150.8:5000/)
 
-Then, open your browser and navigate to:
-```
-http://127.0.0.1:5000
-```
 ## Application Notes
 
-- **Model Loading:** The model loads on startup (~10–20 seconds on CPU).  
+- **Model Loading:** The RoBERTa/BERTweet model loads on startup (~10–20 seconds on CPU).  
 - **Prediction Speed:** Subsequent predictions are instant (model and tokenizer are cached in memory).  
 - **Compatibility:** Runs on laptops, servers, and Raspberry Pi 4/5.  
 - **Resource Usage:** Optimized to use minimal CPU and memory for fast inference.  
 - **Reliability:** Stable for continuous local usage without crashes or memory leaks.  
+- **Deployment:** Fully Dockerized, with separate backend and model server containers for easy management.
 
 ## License
 
